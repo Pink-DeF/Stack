@@ -1,3 +1,5 @@
+#include <iostream>
+#include <cstring>
 #include "Vector.h"
 
 static void clone(ValueType* _data, const ValueType* data, size_t size)
@@ -137,17 +139,21 @@ void Vector::insert(const Vector& vector, size_t pos)
 
 void Vector::popBack()
 {
+    if(_size == 0) { return; }
     _size--;
 }
 void Vector::popFront()
 {
+    if(_size == 0) { return; }
     _size--;
+
     std::memmove(_data, _data + 1, sizeof(ValueType) * _size);
 }
 
+
 void Vector::erase(size_t pos, size_t count)
 {
-    if (_size < pos) { return; }
+    if (_size < pos || _size == 0) { return; }
     if (pos + count <= _size)
     {
         std::memmove(_data + pos, _data + pos + count, sizeof(ValueType) * _size - count);
@@ -159,10 +165,7 @@ void Vector::erase(size_t pos, size_t count)
 void Vector::eraseBetween(size_t beginPos, size_t endPos)
 {
     size_t count = endPos - beginPos;
-    if (_size < beginPos)
-    {
-        return;
-    }
+    if (_size < beginPos || _size == 0) { return; }
 
     if (count + beginPos <= _size)
     {
@@ -202,6 +205,7 @@ long long Vector::find(const ValueType& value) const
             return i;
         }
     }
+    return -1;
 }
 
 void Vector::reserve(size_t capacity)

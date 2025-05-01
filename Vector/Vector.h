@@ -1,6 +1,4 @@
 ﻿#pragma once
-#include <iostream>
-#include <cstring>
 
 using ValueType = double;
 
@@ -19,7 +17,7 @@ public:
 
     ~Vector();
 
-    static friend void realloc(Vector* object, size_t size);
+    friend void realloc(Vector* object, size_t size);
 
     void pushBack(const ValueType& value);
     void pushFront(const ValueType& value);
