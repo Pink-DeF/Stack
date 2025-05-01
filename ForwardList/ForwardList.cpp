@@ -1,5 +1,6 @@
 #include "ForwardList.h"
 
+ForwardList::ForwardList() : head(nullptr), size_list(0) {}
 ForwardList::ForwardList(ValueType n) : size_list(1)
 {
 	head = new Node(n, nullptr);
@@ -25,8 +26,8 @@ void ForwardList::pop_front()
 	}
 
 }
-Node* ForwardList::front() { return head; }
-Node* ForwardList::front() const { return head; }
+ForwardList::Node* ForwardList::front() { return head; }
+ForwardList::Node* ForwardList::front() const { return head; }
 
 size_t ForwardList::size() const
 {

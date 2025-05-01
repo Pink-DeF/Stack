@@ -4,25 +4,24 @@
 
 using ValueType = double;
 
-struct Node
-{
-	ValueType value;
-	Node* back;
-
-	Node(ValueType _value, Node *_back)
-	{
-		value = _value;
-		back = _back;
-	}
-};
-
 class ForwardList
 {
 private:
-	Node* head;
-	size_t size_list;
+	struct Node
+	{
+		ValueType value;
+		Node* back;
+
+		Node(ValueType _value, Node *_back)
+		{
+			value = _value;
+			back = _back;
+		}
+	};
+
+
 public:
-	ForwardList() = default;
+	ForwardList();
 	ForwardList(ValueType value);
 	~ForwardList();
 
@@ -35,4 +34,9 @@ public:
 	bool empty() const;
 	void display();
 	void clear();
+
+private:
+	
+	Node* head;
+	size_t size_list;
 };
