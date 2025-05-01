@@ -1,7 +1,7 @@
 #include "Stack.h"
 #include "StackImplementation.h"
 
-Stack::Stack(StackContainer container = StackContainer::Vector)
+Stack::Stack(StackContainer container)
     : _containerType(container)
 {
 	switch (container)
@@ -17,7 +17,7 @@ Stack::Stack(StackContainer container = StackContainer::Vector)
 	}
 }
 Stack::Stack(const ValueType* valueArray, const size_t arraySize,
-	StackContainer container = StackContainer::Vector)
+	StackContainer container)
 	: _containerType(container)
 {
 	switch (container)
@@ -46,12 +46,12 @@ Stack& Stack::operator=(const Stack& copyStack)
 		{
 		case StackContainer::Vector:
 		{
-			_pimpl = new VectorContainer(*dynamic_cast<VectorContainer*>(copyStack._pimpl));
+			_pimpl = new VectorContainer(*static_cast<VectorContainer*>(copyStack._pimpl));
 			break;
 		}
 		case StackContainer::List:
 		{
-			_pimpl = new ListContainer(*dynamic_cast<ListContainer*>(copyStack._pimpl));
+			_pimpl = new ListContainer(*static_cast<ListContainer*>(copyStack._pimpl));
 			break;
 		}
 		}
@@ -63,21 +63,26 @@ Stack& Stack::operator=(const Stack& copyStack)
 
 Stack::Stack(Stack&& moveStack) noexcept
 {
-	Stack(moveStack);
-	delete _pimpl;
-}
-Stack& Stack::operator=(Stack&& moveStack) noexcept
-{
-	if (this == &moveStack) { return *this; }
+	if (this == &moveStack) { return; }
 
 	delete _pimpl;
 	_pimpl = moveStack._pimpl;
 
 	_containerType = moveStack._containerType;
 	moveStack._pimpl = nullptr;
+}
+Stack& Stack::operator=(Stack&& moveStack) noexcept
+{
+	if (this != &moveStack)
+	{
 
+		delete _pimpl;
+		_pimpl = moveStack._pimpl;
+
+		_containerType = moveStack._containerType;
+		moveStack._pimpl = nullptr;
+	}
 	return *this;
-
 
 }
 

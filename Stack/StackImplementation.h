@@ -1,6 +1,6 @@
 #pragma once
-#include "../ForwardList/ForwardList.h"
-#include "../Vector/Vector.h"
+#include "ForwardList.h"
+#include "Vector.h"
 
 using ValueType = double;
 
@@ -38,13 +38,11 @@ public:
     virtual size_t size() const override;
 
 private:
-    ForwardList list;
+    ForwardList _list;
 };
 
-class VectorContainer : public IStackImplementation {
-private:
-    Vector vec;
-
+class VectorContainer : public IStackImplementation
+{
 public:
 
     VectorContainer() = default;
@@ -62,5 +60,8 @@ public:
     virtual bool isEmpty() const override;
 
     virtual size_t size() const override;
-};
 
+private:
+    Vector _vector;
+
+};
