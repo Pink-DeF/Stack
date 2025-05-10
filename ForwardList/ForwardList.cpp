@@ -5,7 +5,8 @@ ForwardList::ForwardList(ValueType n) : size_list(1)
 {
 	head = new Node(n, nullptr);
 }
-ForwardList::~ForwardList() {
+ForwardList::~ForwardList()
+{
 	while (head != nullptr) { pop_front(); }
 }
 
@@ -24,7 +25,7 @@ void ForwardList::pop_front()
 		delete head;
 		head = temp;
 	}
-
+	size_list--;
 }
 ForwardList::Node* ForwardList::front() { return head; }
 ForwardList::Node* ForwardList::front() const { return head; }
