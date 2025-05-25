@@ -25,7 +25,7 @@ void realloc(Vector* object, size_t size)
 
 Vector::Vector(const ValueType* rawArray, const size_t size, float coef) : _size(size), _capacity(size), _multiplicativeCoef(coef), _data(nullptr)
 {
-    if (size == 0) { _data == nullptr; }
+    if (size == 0) { _data = nullptr; }
     else
     {
         _data = new ValueType[size];
