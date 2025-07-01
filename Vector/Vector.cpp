@@ -12,10 +12,11 @@ static void clone(ValueType* _data, const ValueType* data, size_t size)
 }
 void realloc(Vector* object, size_t size)
 {
-    if (size == 0) { return; }
+    if (size == 0 || object->_size + size < object->_capacity) { return; }
     while (object->_size + size > object->_capacity)
     {
-        object->_capacity = object->_capacity ? static_cast<size_t>(object->_capacity * object->_multiplicativeCoef) : static_cast<size_t>(object->_capacity + object->_multiplicativeCoef);
+        object->_capacity = object->_capacity ? static_cast<size_t>(object->_capacity * object->_multiplicativeCoef) 
+                                              : static_cast<size_t>(object->_capacity + object->_multiplicativeCoef);
     }
     ValueType* temp = new ValueType[object->_capacity];
     clone(temp, object->_data, object->_size);
@@ -23,7 +24,8 @@ void realloc(Vector* object, size_t size)
     object->_data = temp;
 }
 
-Vector::Vector(const ValueType* rawArray, const size_t size, float coef) : _size(size), _capacity(size), _multiplicativeCoef(coef), _data(nullptr)
+Vector::Vector(const ValueType* rawArray, const size_t size, float coef) : _size(size), _capacity(size),
+                                                                           _multiplicativeCoef(coef), _data(nullptr)
 {
     if (size == 0) { _data = nullptr; }
     else
@@ -33,7 +35,8 @@ Vector::Vector(const ValueType* rawArray, const size_t size, float coef) : _size
     }
 }
 
-Vector::Vector(const Vector& other) : _size(other._size), _capacity(other._size), _multiplicativeCoef(other._multiplicativeCoef)
+Vector::Vector(const Vector& other) : _size(other._size), _capacity(other._size),
+                                      _multiplicativeCoef(other._multiplicativeCoef)
 {
     if (this == &other) { return; }
 
@@ -54,7 +57,8 @@ Vector& Vector::operator=(const Vector& other)
     return *this;
 }
 
-Vector::Vector(Vector&& other) noexcept : _size(other._size),_capacity(other._capacity),_multiplicativeCoef(other._multiplicativeCoef),_data(other._data)
+Vector::Vector(Vector&& other) noexcept : _size(other._size),_capacity(other._capacity),
+                                          _multiplicativeCoef(other._multiplicativeCoef),_data(other._data)
 {
     if (this == &other) { return; }
     other._size = 0;
@@ -106,7 +110,7 @@ void Vector::pushFront(const ValueType& value)
 
 void Vector::insert(const ValueType& value, size_t pos)
 {
-    if (pos > _size + 1) { return; }
+    if (pos > _size) { return; }
     realloc(this, 1);
 
     if (pos == _size + 1)
@@ -139,12 +143,12 @@ void Vector::insert(const Vector& vector, size_t pos)
 
 void Vector::popBack()
 {
-    if(_size == 0) { return; }
+    if(_size == 0) { throw(std::runtime_error("Error 011. Can't delete item")); }
     _size--;
 }
 void Vector::popFront()
 {
-    if(_size == 0) { return; }
+    if(_size == 0) { throw(std::runtime_error("Error 012. Can't delete item")); }
     _size--;
 
     std::memmove(_data, _data + 1, sizeof(ValueType) * _size);
@@ -153,24 +157,20 @@ void Vector::popFront()
 
 void Vector::erase(size_t pos, size_t count)
 {
-    if (_size < pos || _size == 0) { return; }
-    if (pos + count <= _size)
-    {
-        std::memmove(_data + pos, _data + pos + count, sizeof(ValueType) * _size - count);
-    }
+    if (_size <= pos || _size == 0) { return; }
+    count = std::min(count, _size - pos);
 
+    std::memmove(_data + pos, _data + pos + count, sizeof(ValueType) * _size - count);
     _size -= count;
 }
 
 void Vector::eraseBetween(size_t beginPos, size_t endPos)
 {
+    if (beginPos >= endPos || beginPos >= _size) { return; }
+    endPos = std::min(endPos, _size);
     size_t count = endPos - beginPos;
-    if (_size < beginPos || _size == 0) { return; }
 
-    if (count + beginPos <= _size)
-    {
-        std::memmove(_data + beginPos, _data + beginPos + count, sizeof(ValueType) * _size - count);
-    }
+    std::memmove(_data + beginPos, _data + beginPos + count, sizeof(ValueType) * _size - count);
     _size -= count;
 }
 
@@ -212,7 +212,7 @@ void Vector::reserve(size_t capacity)
 {
     if (_capacity >= capacity) { return; }
 
-    ValueType* temp = new ValueType[_capacity];
+    ValueType* temp = new ValueType[capacity];
     clone(temp, _data, _size);
     delete[] _data;
     _data = temp;
@@ -224,7 +224,7 @@ void Vector::shrinkToFit()
 {
     if (_size == _capacity) { return; }
 
-    ValueType* temp = new ValueType[_capacity];
+    ValueType* temp = new ValueType[_size];
     clone(temp, _data, _size);
     delete[] _data;
     _data = temp;
