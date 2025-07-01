@@ -1,7 +1,7 @@
 #include "ForwardList.h"
 
 ForwardList::ForwardList() : head(nullptr), size_list(0) {}
-ForwardList::ForwardList(ValueType n) : size_list(1)
+ForwardList::ForwardList(ValueType n) : head(nullptr), size_list(1)
 {
 	head = new Node(n, nullptr);
 }
@@ -19,16 +19,25 @@ void ForwardList::push_front(ValueType value)
 }
 void ForwardList::pop_front()
 {
-	if (head != nullptr)
-	{
-		Node* temp = head->back;
-		delete head;
-		head = temp;
-	}
+	if (empty()){ throw std::out_of_range("Error 113. List is empty"); }
+
+	Node* temp = head->_next;
+	delete head;
+	head = temp;
 	size_list--;
+
 }
-ForwardList::Node* ForwardList::front() { return head; }
-ForwardList::Node* ForwardList::front() const { return head; }
+
+ValueType& ForwardList::front()
+	{ 
+		if (empty()){ throw std::out_of_range("Error 111. List is empty"); }
+		return head->value;
+	}
+const ValueType& ForwardList::front() const
+	{ 
+		if (empty()){ throw std::out_of_range("Error 112. List is empty"); }
+		return head->value;
+	}
 
 size_t ForwardList::size() const
 {
@@ -43,8 +52,8 @@ void ForwardList::display()
 	Node* temp = head;
 	while (temp)
 	{
-		std::cout << temp->value << " // ";
-		temp = temp->back;
+		std::cout << temp->_value << " // ";
+		temp = temp->_next;
 	}
 	std::cout << std::endl;
 }
@@ -52,6 +61,9 @@ void ForwardList::clear()
 {
 	while (head != nullptr)
 	{
-		pop_front();
+        Node* temp = head;
+        head = head->_next;
+        delete temp;
 	}
+	size_list = 0;
 }

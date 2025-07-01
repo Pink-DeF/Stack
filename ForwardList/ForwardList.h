@@ -9,14 +9,14 @@ class ForwardList
 private:
 	struct Node
 	{
-		ValueType value;
-		Node* back;
-
-		Node(ValueType _value, Node *_back)
+		Node(ValueType value, Node *next)
 		{
-			value = _value;
-			back = _back;
+			_value = value;
+			_next = next;
 		}
+
+		ValueType _value;
+		Node* _next;
 	};
 
 
@@ -27,8 +27,8 @@ public:
 
 	void push_front(ValueType value);
 	void pop_front();
-	Node* front();
-	Node* front() const;
+	ValueType& front();
+	const ValueType& front() const;
 
 	size_t size() const;
 	bool empty() const;
