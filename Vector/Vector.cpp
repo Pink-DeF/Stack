@@ -94,7 +94,7 @@ Vector::~Vector()
 
 void Vector::pushBack(const ValueType& value)
 {
-    realloc(this, 1);
+    if(_size >= _capacity){ realloc(this, 1); }
 
     _data[_size] = value;
     _size++;
@@ -143,12 +143,12 @@ void Vector::insert(const Vector& vector, size_t pos)
 
 void Vector::popBack()
 {
-    if(_size == 0) { throw(std::runtime_error("Error 011. Can't delete item")); }
+    if(_size == 0) { throw(std::runtime_error("Error 211. Can't delete item")); }
     _size--;
 }
 void Vector::popFront()
 {
-    if(_size == 0) { throw(std::runtime_error("Error 012. Can't delete item")); }
+    if(_size == 0) { throw(std::runtime_error("Error 212. Can't delete item")); }
     _size--;
 
     std::memmove(_data, _data + 1, sizeof(ValueType) * _size);
@@ -189,10 +189,12 @@ double Vector::loadFactor() const
 
 ValueType& Vector::operator[](size_t idx)
 {
+    if(_size <= idx){ throw std::out_of_range("Error 221. Out of range"); }
     return _data[idx];
 }
 const ValueType& Vector::operator[](size_t idx) const
 {
+    if(_size <= idx){ throw std::out_of_range("Error 222. Out of range"); }
     return _data[idx];
 }
 
