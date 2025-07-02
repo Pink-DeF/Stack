@@ -23,8 +23,13 @@ private:
 public:
 	ForwardList();
 	ForwardList(ValueType value);
+
+    ForwardList(const ForwardList& other);
+    ForwardList& operator=(const ForwardList& other);
+
 	~ForwardList();
 
+	void push_back(ValueType value);
 	void push_front(ValueType value);
 	void pop_front();
 	ValueType& front();
