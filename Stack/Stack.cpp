@@ -17,8 +17,8 @@ Stack::Stack(StackContainer container)
 	}
 }
 Stack::Stack(const ValueType* valueArray, const size_t arraySize,
-	StackContainer container)
-	: _containerType(container)
+			 StackContainer container)
+		    :_containerType(container)
 {
 	switch (container)
 	{
@@ -34,6 +34,7 @@ Stack::Stack(const ValueType* valueArray, const size_t arraySize,
 }
 
 Stack::Stack(const Stack& copyStack)
+	 :_pimpl(nullptr), _containerType(copyStack._containerType)
 {
 	*this = copyStack;
 }
@@ -42,18 +43,19 @@ Stack& Stack::operator=(const Stack& copyStack)
 	if (this != &copyStack)
 	{
 		delete _pimpl;
-		switch (_containerType)
+
+		switch (copyStack._containerType)
 		{
-		case StackContainer::Vector:
-		{
-			_pimpl = new VectorContainer(*static_cast<VectorContainer*>(copyStack._pimpl));
-			break;
-		}
-		case StackContainer::List:
-		{
-			_pimpl = new ListContainer(*static_cast<ListContainer*>(copyStack._pimpl));
-			break;
-		}
+			case StackContainer::Vector:
+			{
+				_pimpl = new VectorContainer(*dynamic_cast<VectorContainer*>(copyStack._pimpl));
+				break;
+			}
+			case StackContainer::List:
+			{
+				_pimpl = new ListContainer(*dynamic_cast<ListContainer*>(copyStack._pimpl));
+				break;
+			}
 		}
 
 		_containerType = copyStack._containerType;
